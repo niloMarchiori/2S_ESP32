@@ -29,7 +29,19 @@ bool evaluateRule(float value) {
 }
 
 void publishReading(const SensorReading &reading) {
-  return;
+  if (!mqttClient.connected()) {
+    return;
+  }
+
+  StaticJsonDocument<128> doc;
+  doc["value"] = reading.value;
+  doc["timestampMs"] = reading.timestampMs;
+
+  char payload[128];
+  serializeJson(doc, payload, sizeof(payload));
+
+  String topic = String(TOPIC_PREFIX) + "/telemetry";
+  mqttClient.publish(topic.c_str(), payload);
 }
 
 void publishAlert(const SensorReading &reading) {
