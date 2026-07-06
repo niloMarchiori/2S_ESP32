@@ -16,9 +16,10 @@ struct SensorReading {
   uint32_t timestampMs;
 };
 
-// TODO (nucleo): execute a leitura
+//leitura ADC bruta do pino SENSOR_PIN (0-4095)
 float readSensor() {
-  return 0;
+  int raw = analogRead(SENSOR_PIN);
+  return (float)raw;
 }
 
 // TODO (nucleo): implemente a regra de alerta por limiar.
