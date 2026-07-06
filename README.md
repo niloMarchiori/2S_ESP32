@@ -40,11 +40,17 @@ Subscrever todos os tópicos e observar as mensagens:
 mosquitto_sub -h broker.hivemq.com -t '2solve/firmware-teste/niloMarchiori/#' -v
 ```
 
-Saída esperada:
+Saída esperada para threshold=3000 e histerese=100:
 ```
-2solve/firmware-teste/niloMarchiori/telemetry {"value":2145,"timestampMs":164418}
-2solve/firmware-teste/niloMarchiori/telemetry {"value":2242,"timestampMs":166418}
-2solve/firmware-teste/niloMarchiori/alerts {"value":2242,"timestampMs":166418,"alert":true,"threshold":3000}
+2solve/firmware-teste/niloMarchiori/telemetry {"value":2124,"timestampMs":162418}
+2solve/firmware-teste/niloMarchiori/telemetry {"value":2845,"timestampMs":164418}
+2solve/firmware-teste/niloMarchiori/telemetry {"value":3242,"timestampMs":166418}
+2solve/firmware-teste/niloMarchiori/alerts {"value":3242,"timestampMs":166418,"alert":true,"threshold":3000}
+2solve/firmware-teste/niloMarchiori/telemetry {"value":3114,"timestampMs":168418}
+2solve/firmware-teste/niloMarchiori/telemetry {"value":3921,"timestampMs":170418}
+2solve/firmware-teste/niloMarchiori/telemetry {"value":2897,"timestampMs":172418}
+2solve/firmware-teste/niloMarchiori/telemetry {"value":3032,"timestampMs":174418}
+2solve/firmware-teste/niloMarchiori/alerts {"value":3032,"timestampMs":174418,"alert":true,"threshold":3000}
 ```
 
 ### Cliente web HiveMQ
