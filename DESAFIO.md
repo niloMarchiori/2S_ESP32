@@ -47,7 +47,7 @@ Alternativa sem VS Code: importe os arquivos do projeto em [wokwi.com](https://w
 
 ## O que será avaliado
 
-Pense fora da caixa. O código a IA escreve.
+Pense fora da caixa.
 
 ## Entrega
 
