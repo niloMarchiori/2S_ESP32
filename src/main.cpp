@@ -25,6 +25,18 @@ float readSensor() {
 // TODO (nucleo): implemente a regra de alerta por limiar.
 // Deve retornar true quando o valor cruzar ALERT_THRESHOLD.
 bool evaluateRule(float value) {
+  static bool alertActive = false;
+  const int hysteresisDelta = 100;
+
+  if (!alertActive && value >= ALERT_THRESHOLD) {
+    alertActive = true;
+    return true;
+  }
+
+  if (alertActive && value <= ALERT_THRESHOLD - hysteresisDelta) {
+    alertActive = false;
+  }
+
   return false;
 }
 
@@ -45,7 +57,21 @@ void publishReading(const SensorReading &reading) {
 }
 
 void publishAlert(const SensorReading &reading) {
-  return;
+  if (!mqttClient.connected()) {
+    return;
+  }
+
+  StaticJsonDocument<128> doc;
+  doc["value"] = reading.value;
+  doc["timestampMs"] = reading.timestampMs;
+  doc["alert"] = true;
+  doc["threshold"] = ALERT_THRESHOLD;
+
+  char payload[128];
+  serializeJson(doc, payload, sizeof(payload));
+
+  String topic = String(TOPIC_PREFIX) + "/alerts";
+  mqttClient.publish(topic.c_str(), payload);
 }
 
 void connectWiFi() {
