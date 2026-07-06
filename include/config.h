@@ -8,12 +8,13 @@
 #define MQTT_BROKER "broker.hivemq.com"
 #define MQTT_PORT 1883
 
-// TODO: troque por um prefixo UNICO (ex.: seu nome, sem espacos/acentos).
-// Evita que suas mensagens se misturem com as de outros candidatos no broker publico.
-#define TOPIC_PREFIX "2solve/firmware-teste/<seu-nome>"
+#define TOPIC_PREFIX "2solve/firmware-teste/niloMarchiori"
 
 // Limiar de alerta (escala bruta do ADC, 0-4095)
 #define ALERT_THRESHOLD 3000
+
+// Histerese do alerta (o alerta desativa quando valor <= ALERT_THRESHOLD - ALERT_HYSTERESIS_DELTA)
+#define ALERT_HYSTERESIS_DELTA 100
 
 // Intervalo de amostragem, em milissegundos
 #define SAMPLE_INTERVAL_MS 2000

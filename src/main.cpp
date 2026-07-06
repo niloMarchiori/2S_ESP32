@@ -26,14 +26,13 @@ float readSensor() {
 // Deve retornar true quando o valor cruzar ALERT_THRESHOLD.
 bool evaluateRule(float value) {
   static bool alertActive = false;
-  const int hysteresisDelta = 100;
 
   if (!alertActive && value >= ALERT_THRESHOLD) {
     alertActive = true;
     return true;
   }
 
-  if (alertActive && value <= ALERT_THRESHOLD - hysteresisDelta) {
+  if (alertActive && value <= ALERT_THRESHOLD - ALERT_HYSTERESIS_DELTA) {
     alertActive = false;
   }
 
@@ -86,15 +85,24 @@ void connectWiFi() {
 
 // TODO (diferencial): troque por reconexao com backoff em vez de tentativa bloqueante simples.
 void connectMQTT() {
+  unsigned long backoffMs = 1000;
+  const unsigned long maxBackoffMs = 32000;
+
   while (!mqttClient.connected()) {
     String clientId = String("esp32-") + String((uint32_t)ESP.getEfuseMac(), HEX);
     Serial.printf("Conectando ao broker MQTT como '%s'...\n", clientId.c_str());
     if (mqttClient.connect(clientId.c_str())) {
       Serial.println("MQTT conectado.");
-    } else {
-      Serial.printf("Falha (rc=%d). Tentando novamente em 2s.\n", mqttClient.state());
-      delay(2000);
+      break;
     }
+
+    int state = mqttClient.state();
+    unsigned long jitter = backoffMs / 2;
+    unsigned long delayMs = backoffMs + (jitter ? random(0, jitter) : 0);
+
+    Serial.printf("Falha (rc=%d). Tentando novamente em %.1fs.\n", state, delayMs / 1000.0);
+    delay(delayMs);
+    backoffMs = min(backoffMs * 2, maxBackoffMs);
   }
 }
 
